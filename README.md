@@ -57,6 +57,7 @@ Below is a screen shot of the example app, which shows what the HSVColorPicker c
 ## Author
 
 Alex Klein, support@athenstean.com
+
 Nicholas Hart, nick@haikudeck.com
 
 ## License
