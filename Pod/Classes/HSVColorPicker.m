@@ -10,7 +10,7 @@
 #import <OpenGLES/ES2/glext.h>
 #import <QuartzCore/QuartzCore.h>
 
-#import "ColorPicker.h"
+#import "HSVColorPicker.h"
 
 // This defines the thickness of the hue circle.
 static float const CIRCLE_THICKNESS = 0.2f;
@@ -133,10 +133,7 @@ static float const BOX_THICKNESS = 0.7f;
     if ([EAGLContext currentContext] == glContext)
         [EAGLContext setCurrentContext:nil];
 	
-    [glContext release];
     glContext = nil;
-   
-    [super dealloc];
 }
 
 - (void)layoutSublayers
@@ -277,7 +274,7 @@ static float const BOX_THICKNESS = 0.7f;
 
 @end
 
-@implementation ColorPicker
+@implementation HSVColorPicker
 @synthesize subDivisions, delegate;
 
 - (id)initWithFrame:(CGRect)frame

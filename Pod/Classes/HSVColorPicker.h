@@ -12,7 +12,7 @@
 @class SaturationBrightnessLayer;
 @class MarkerLayer;
 
-@protocol ColorPickerDelegate;
+@protocol HSVColorPickerDelegate;
 
 // A Hue/Saturation/Brightness (HSB) color picker control that shows hue as a
 // color gradient circle and saturation/brightness in a box inside the circle.
@@ -20,7 +20,7 @@
 // Note, everything is rendered in layers to maximize caching. The hue circle
 // is drawn using core graphics and the saturation/brightness box is drawn
 // using an OpenGL ES 2.0 layer with a pixel shader.
-@interface ColorPicker : UIView<UIGestureRecognizerDelegate>
+@interface HSVColorPicker : UIView<UIGestureRecognizerDelegate>
 {
     HueCircleLayer * layerHueCircle;
     SaturationBrightnessLayer * layerSaturationBrightnessBox;
@@ -37,8 +37,6 @@
     unsigned int subDivisions;
     UILongPressGestureRecognizer * hueGestureRecognizer;
     UILongPressGestureRecognizer * saturationBrightnessGestureRecognizer;
-    
-    NSObject<ColorPickerDelegate> * delegate;
 }
 
 // The color represented by the control.
@@ -49,9 +47,9 @@
 // of discrete values (e.g. allow the user to pick only from 6 values).
 @property (assign) unsigned int subDivisions;
 
-@property (assign) NSObject<ColorPickerDelegate> * delegate;
+@property (weak) NSObject<HSVColorPickerDelegate> * delegate;
 @end
 
-@protocol ColorPickerDelegate <NSObject>
-- (void)colorPicker:(ColorPicker*)colorPicker changedColor:(UIColor*)color;
+@protocol HSVColorPickerDelegate <NSObject>
+- (void)colorPicker:(HSVColorPicker*)colorPicker changedColor:(UIColor*)color;
 @end
