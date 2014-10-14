@@ -47,7 +47,7 @@ Be sure to implement the `HSVColorPickerDelegate` in your view controller so you
 
 Below is a screen shot of the example app, which shows what the HSVColorPicker control looks like.
 
-![https://raw.githubusercontent.com/GiantThinkwell/HSVColorPicker/master/ScreenShot.png][screen shot]
+![screen shot](ScreenShot.png)
 
 ## TODO
 1. implement autolayout support
