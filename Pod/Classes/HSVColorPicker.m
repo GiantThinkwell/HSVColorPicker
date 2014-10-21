@@ -87,13 +87,13 @@ static float const BOX_THICKNESS = 0.7f;
 
 @implementation SaturationBrightnessLayer
 
--(id)init
+-(id)initWithContext:(EAGLContext *) context
 {
     self = [super init];
     if (self)
     {
         self.opaque = YES;
-        glContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+        glContext = context;
         [EAGLContext setCurrentContext:glContext];
         glGenRenderbuffers(1, &renderbuffer);
         glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
@@ -277,6 +277,15 @@ static float const BOX_THICKNESS = 0.7f;
 @implementation HSVColorPicker
 @synthesize subDivisions, delegate;
 
++ (EAGLContext *)sharedEAGLContext {
+    static EAGLContext * sharedEAGLContext;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedEAGLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+    });
+    return sharedEAGLContext;
+}
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -290,7 +299,7 @@ static float const BOX_THICKNESS = 0.7f;
         [layerHueCircle setNeedsDisplay];
         [self.layer addSublayer:layerHueCircle];
         
-        layerSaturationBrightnessBox = [[SaturationBrightnessLayer alloc] init];
+        layerSaturationBrightnessBox = [[SaturationBrightnessLayer alloc] initWithContext:[HSVColorPicker sharedEAGLContext]];
         layerSaturationBrightnessBox.frame = self.bounds;
         [layerSaturationBrightnessBox setNeedsDisplay];
         [self.layer addSublayer:layerSaturationBrightnessBox];

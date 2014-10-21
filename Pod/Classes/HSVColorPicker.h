@@ -47,6 +47,11 @@
 // of discrete values (e.g. allow the user to pick only from 6 values).
 @property (assign) unsigned int subDivisions;
 
+/* a shared EAGLContext used by all instances of HSVColorPicker
+ @return an EAGLContext for use with all instances of HSVColorPicker
+ */
++ (EAGLContext *)sharedEAGLContext;
+
 @property (weak) NSObject<HSVColorPickerDelegate> * delegate;
 @end
 
