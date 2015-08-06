@@ -47,6 +47,10 @@
 // of discrete values (e.g. allow the user to pick only from 6 values).
 @property (assign) unsigned int subDivisions;
 
+@property (assign, nonatomic) CGFloat colorHue;
+@property (assign, nonatomic) CGFloat colorSaturation;
+@property (assign, nonatomic) CGFloat colorBrightness;
+
 /* a shared EAGLContext used by all instances of HSVColorPicker
  @return an EAGLContext for use with all instances of HSVColorPicker
  */

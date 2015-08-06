@@ -370,6 +370,22 @@ static float const BOX_THICKNESS = 0.7f;
     return [UIColor colorWithHue:colorHue saturation:colorSaturation brightness:colorBrightness alpha:colorAlpha];
 }
 
+- (void)setColorHue:(CGFloat)aColorHue {
+    colorHue = aColorHue;
+    layerSaturationBrightnessBox.hue = colorHue;
+    layerHueMarker.frame = [self hueMarkerRect];
+}
+
+- (void)setColorBrightness:(CGFloat)aColorBrightness {
+    colorBrightness = aColorBrightness;
+    layerSaturationBrightnessMarker.frame = [self saturationBrightnessMarkerRect];
+}
+
+- (void)setColorSaturation:(CGFloat)aColorSaturation {
+    colorSaturation = aColorSaturation;
+    layerSaturationBrightnessMarker.frame = [self saturationBrightnessMarkerRect];
+}
+
 - (void)setSubDivisions:(unsigned int)value
 {
     subDivisions = value;
