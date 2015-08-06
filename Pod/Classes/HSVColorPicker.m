@@ -276,6 +276,8 @@ static float const BOX_THICKNESS = 0.7f;
 
 @implementation HSVColorPicker
 @synthesize subDivisions, delegate;
+@dynamic colorHue, colorSaturation, colorBrightness;
+
 
 + (EAGLContext *)sharedEAGLContext {
     static EAGLContext * sharedEAGLContext;
@@ -370,15 +372,27 @@ static float const BOX_THICKNESS = 0.7f;
     return [UIColor colorWithHue:colorHue saturation:colorSaturation brightness:colorBrightness alpha:colorAlpha];
 }
 
+- (CGFloat)colorHue {
+    return colorHue;
+}
+
 - (void)setColorHue:(CGFloat)aColorHue {
     colorHue = aColorHue;
     layerSaturationBrightnessBox.hue = colorHue;
     layerHueMarker.frame = [self hueMarkerRect];
 }
 
+- (CGFloat)colorBrightness {
+    return colorBrightness;
+}
+
 - (void)setColorBrightness:(CGFloat)aColorBrightness {
     colorBrightness = aColorBrightness;
     layerSaturationBrightnessMarker.frame = [self saturationBrightnessMarkerRect];
+}
+
+- (CGFloat)colorSaturation {
+    return colorSaturation;
 }
 
 - (void)setColorSaturation:(CGFloat)aColorSaturation {
