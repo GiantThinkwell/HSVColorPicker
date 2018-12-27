@@ -24,6 +24,7 @@ static float const BOX_THICKNESS = 0.7f;
 }
 
 @property (assign) unsigned int subDivisions;
+@property (assign) BOOL hueReverse;
 @end
 
 @implementation HueCircleLayer
@@ -58,7 +59,11 @@ static float const BOX_THICKNESS = 0.7f;
         CGContextAddPath(context, path);
         CGContextSetFillColorWithColor(context, color.CGColor);
         CGContextFillPath(context);
-        CGContextRotateCTM(context, -incrementAngle);
+        if (!_hueReverse) {
+            CGContextRotateCTM(context, -incrementAngle);
+        } else {
+            CGContextRotateCTM(context, incrementAngle);
+        }
     }
     CGPathRelease(path);
 }
@@ -276,6 +281,8 @@ static float const BOX_THICKNESS = 0.7f;
 
 @implementation HSVColorPicker
 @synthesize subDivisions, delegate;
+@dynamic colorHue, colorSaturation, colorBrightness;
+
 
 + (EAGLContext *)sharedEAGLContext {
     static EAGLContext * sharedEAGLContext;
@@ -288,14 +295,21 @@ static float const BOX_THICKNESS = 0.7f;
 
 - (id)initWithFrame:(CGRect)frame
 {
+    return [self initWithFrame:frame hueReverse:NO];
+}
+
+- (id)initWithFrame:(CGRect)frame hueReverse:(BOOL)hueReverse {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
         self.opaque = NO;
         self.color = [UIColor whiteColor];
+        self.hueReverse = hueReverse;
         
         layerHueCircle = [[HueCircleLayer alloc] init];
         layerHueCircle.frame = self.bounds;
+        layerHueCircle.contentsScale = [UIScreen mainScreen].scale;
+        layerHueCircle.hueReverse = self.hueReverse;
         [layerHueCircle setNeedsDisplay];
         [self.layer addSublayer:layerHueCircle];
         
@@ -307,7 +321,7 @@ static float const BOX_THICKNESS = 0.7f;
         layerHueMarker = [[MarkerLayer alloc] init];
         [layerHueMarker setNeedsDisplay];
         [self.layer addSublayer:layerHueMarker];
-
+        
         layerSaturationBrightnessMarker = [[MarkerLayer alloc] init];
         [layerSaturationBrightnessMarker setNeedsDisplay];
         [self.layer addSublayer:layerSaturationBrightnessMarker];
@@ -370,6 +384,34 @@ static float const BOX_THICKNESS = 0.7f;
     return [UIColor colorWithHue:colorHue saturation:colorSaturation brightness:colorBrightness alpha:colorAlpha];
 }
 
+- (CGFloat)colorHue {
+    return colorHue;
+}
+
+- (void)setColorHue:(CGFloat)aColorHue {
+    colorHue = aColorHue;
+    layerSaturationBrightnessBox.hue = colorHue;
+    layerHueMarker.frame = [self hueMarkerRect];
+}
+
+- (CGFloat)colorBrightness {
+    return colorBrightness;
+}
+
+- (void)setColorBrightness:(CGFloat)aColorBrightness {
+    colorBrightness = aColorBrightness;
+    layerSaturationBrightnessMarker.frame = [self saturationBrightnessMarkerRect];
+}
+
+- (CGFloat)colorSaturation {
+    return colorSaturation;
+}
+
+- (void)setColorSaturation:(CGFloat)aColorSaturation {
+    colorSaturation = aColorSaturation;
+    layerSaturationBrightnessMarker.frame = [self saturationBrightnessMarkerRect];
+}
+
 - (void)setSubDivisions:(unsigned int)value
 {
     subDivisions = value;
@@ -385,7 +427,10 @@ static float const BOX_THICKNESS = 0.7f;
 
 - (CGRect)hueMarkerRect
 {
-    CGFloat const radians = colorHue * 2.0f * M_PI;
+    CGFloat radians = colorHue * 2.0f * M_PI;
+    if (self.hueReverse) {
+        radians *= -1;
+    }
     CGPoint const position = CGPointMake(cos(radians) * (radius - thickness / 2.0f), -sin(radians) * (radius - thickness / 2.0f));
     return CGRectMake(position.x - thickness / 2.0f + self.bounds.size.width / 2.0f, position.y - thickness / 2.0f+ self.bounds.size.height / 2.0f, thickness, thickness);
 }
@@ -431,6 +476,11 @@ static float const BOX_THICKNESS = 0.7f;
 
         CGFloat const radians = atan2(center.y - position.y, position.x - center.x);
         colorHue = radians / (2.0f * M_PI);
+        
+        if (self.hueReverse) {
+            colorHue *= -1;
+        }
+        
         if ( colorHue < 0.0f )
         {
             colorHue += 1.0f;
